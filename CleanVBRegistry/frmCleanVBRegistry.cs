@@ -46,6 +46,7 @@ namespace CleanVBRegistry {
                             if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
                                 if(Regex.IsMatch(vRegKeyValue.ToString(),vPathern,RegexOptions.IgnoreCase)) {
                                     InsertRegistryTab(ref RegistryTab,vSubKeyNode.Name,vRegKeyValue.ToString());
+                                    //vReg.DeleteSubKeyTree(xRegName);
                                     break;
                                 }
                             }
