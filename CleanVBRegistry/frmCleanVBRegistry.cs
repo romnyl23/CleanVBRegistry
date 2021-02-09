@@ -23,6 +23,7 @@ namespace CleanVBRegistry {
                             if(vF != null) {                                
                                 if(Regex.IsMatch(vF.ToString(),vPathern,RegexOptions.IgnoreCase)) {                                    
                                     vReg.DeleteSubKeyTree(xRegName);
+                                    //here
                                     break;
                                 }
                             }

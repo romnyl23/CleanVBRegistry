@@ -48,5 +48,6 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
-.vs/dotnetcore/DesignTimeBuild/.dtbcache.v2
+#.vs/dotnetcore/DesignTimeBuild/.dtbcache.v2
+*vs/
 source/.vs/comun/v15/
