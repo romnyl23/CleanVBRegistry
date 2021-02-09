@@ -41,18 +41,20 @@ namespace CleanVBRegistry {
                     RegistryKey vSubKey2 = vRegSubKey.OpenSubKey(SubKeyName,true);
                     foreach(string SubKeyDeepName in vSubKey2.GetSubKeyNames()) {
                         try {
-                            var vSubKr = vSubK.OpenSubKey(zRegName,true);
+                            var vSubKr = vSubKey2.OpenSubKey(SubKeyDeepName,true);
                             var vF = vSubKr.GetValue("");
-                            if(vF != null) {                                
-                                if(Regex.IsMatch(vF.ToString(),vPathern,RegexOptions.IgnoreCase)) {                                    
+                            if(vF != null) {
+                                if(Regex.IsMatch(vF.ToString(),vPathern,RegexOptions.IgnoreCase)) {
                                     //vReg.DeleteSubKeyTree(xRegName);
                                     //here
-                            		RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
-		                            object vRegKeyValue = vSubKeyNode.GetValue("");
-        		                    if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
-                	                	if(Regex.IsMatch(vRegKeyValue.ToString(),vPathern,RegexOptions.IgnoreCase)) {
-                                    		InsertRegistryTab(ref RegistryTab,vSubKeyNode.Name,vRegKeyValue.ToString());
-		                                    break;
+                                    RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
+                                    object vRegKeyValue = vSubKeyNode.GetValue("");
+                                    if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
+                                        if(Regex.IsMatch(vRegKeyValue.ToString(),vPathern,RegexOptions.IgnoreCase)) {
+                                            InsertRegistryTab(ref RegistryTab,vSubKeyNode.Name,vRegKeyValue.ToString());
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         } catch(Exception yEx) {
