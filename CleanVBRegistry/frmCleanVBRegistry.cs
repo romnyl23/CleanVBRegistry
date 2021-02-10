@@ -12,6 +12,9 @@ namespace CleanVBRegistry {
 
         public frmCleanVBRegistry() {
             InitializeComponent();
+            txtContabRpt.KeyPress +=new  KeyPressEventHandler(txtInputKey_Press);
+            txtLibGalac.KeyPress += new KeyPressEventHandler(txtInputKey_Press);
+            txtSaw.KeyPress += new KeyPressEventHandler(txtInputKey_Press);
         }
 
         private DataTable TabConfig() {
@@ -82,6 +85,12 @@ namespace CleanVBRegistry {
 
         }
 
+        private void txtInputKey_Press(object sender,KeyPressEventArgs e) {
+            if(!(char.IsLetterOrDigit(e.KeyChar) || (Keys)e.KeyChar == Keys.Delete || (Keys)e.KeyChar == Keys.Back || (Keys)e.KeyChar == Keys.Enter || (Keys)e.KeyChar == Keys.Tab)) {
+                e.KeyChar = '\0';
+            }
+        }
+
         private void DeleteRegistry(DataTable vTable) {
 
             foreach(DataRow vRow in vTable.Rows) {
@@ -94,6 +103,6 @@ namespace CleanVBRegistry {
             dgvRegKey.EndEdit();
             RegistryTab = (DataTable)dgvRegKey.DataSource;
             DeleteRegistry(RegistryTab);
-        }
+        }     
     }
 }
