@@ -42,14 +42,14 @@
             // dgvRegKey
             // 
             this.dgvRegKey.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRegKey.Location = new System.Drawing.Point(12, 50);
+            this.dgvRegKey.Location = new System.Drawing.Point(9, 50);
             this.dgvRegKey.Name = "dgvRegKey";
-            this.dgvRegKey.Size = new System.Drawing.Size(368, 150);
+            this.dgvRegKey.Size = new System.Drawing.Size(287, 205);
             this.dgvRegKey.TabIndex = 1;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(286, 12);
+            this.button2.Location = new System.Drawing.Point(218, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 27);
             this.button2.TabIndex = 2;
@@ -61,7 +61,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 267);
+            this.ClientSize = new System.Drawing.Size(303, 267);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.dgvRegKey);
             this.Controls.Add(this.button1);
