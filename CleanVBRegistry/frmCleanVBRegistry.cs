@@ -53,7 +53,7 @@ namespace CleanVBRegistry {
                 vSep2 = (OptLib != string.Empty && OptConatbRpt != string.Empty) ? "|" : "";
                 //                
                 vPathern = $"({OptSaw +vSep1 + OptLib +vSep2 + OptConatbRpt})";
-                string vTypeLib = Environment.Is64BitOperatingSystem ? "WOW6432Node\\CLSID" : "CLSID";
+                string vTypeLib = Environment.Is64BitOperatingSystem ? "WOW6432Node\\TypeLib" : "TypeLib";
                 RegistryKey vRegKeyMaster = Registry.ClassesRoot;
                 RegistryKey vRegSubKey = vRegKeyMaster.OpenSubKey(vTypeLib,true);
                 foreach(string SubKeyName in vRegSubKey.GetSubKeyNames()) {
