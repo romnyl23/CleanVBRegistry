@@ -55,6 +55,7 @@
             // 
             // button2
             // 
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(12, 55);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 27);
@@ -100,6 +101,7 @@
             // 
             // txtLibGalac
             // 
+            this.txtLibGalac.Enabled = false;
             this.txtLibGalac.Location = new System.Drawing.Point(180, 14);
             this.txtLibGalac.Name = "txtLibGalac";
             this.txtLibGalac.Size = new System.Drawing.Size(45, 20);
@@ -107,6 +109,7 @@
             // 
             // txtContabRpt
             // 
+            this.txtContabRpt.Enabled = false;
             this.txtContabRpt.Location = new System.Drawing.Point(180, 39);
             this.txtContabRpt.Name = "txtContabRpt";
             this.txtContabRpt.Size = new System.Drawing.Size(45, 20);
@@ -114,6 +117,7 @@
             // 
             // txtSaw
             // 
+            this.txtSaw.Enabled = false;
             this.txtSaw.Location = new System.Drawing.Point(180, 64);
             this.txtSaw.Name = "txtSaw";
             this.txtSaw.Size = new System.Drawing.Size(45, 20);
