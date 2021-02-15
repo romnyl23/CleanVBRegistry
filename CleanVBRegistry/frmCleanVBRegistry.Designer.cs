@@ -66,12 +66,15 @@
             // chLibGalac
             // 
             this.chLibGalac.AutoSize = true;
+            this.chLibGalac.Checked = true;
+            this.chLibGalac.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chLibGalac.Location = new System.Drawing.Point(104, 17);
             this.chLibGalac.Name = "chLibGalac";
             this.chLibGalac.Size = new System.Drawing.Size(68, 17);
             this.chLibGalac.TabIndex = 3;
             this.chLibGalac.Text = "LibGalac";
             this.chLibGalac.UseVisualStyleBackColor = true;
+            this.chLibGalac.CheckedChanged += new System.EventHandler(this.chLibGalac_CheckedChanged);
             // 
             // chContabRpt
             // 
@@ -82,6 +85,7 @@
             this.chContabRpt.TabIndex = 4;
             this.chContabRpt.Text = "ContabRpt";
             this.chContabRpt.UseVisualStyleBackColor = true;
+            this.chContabRpt.CheckedChanged += new System.EventHandler(this.chContabRpt_CheckedChanged);
             // 
             // chSaw
             // 
@@ -92,6 +96,7 @@
             this.chSaw.TabIndex = 5;
             this.chSaw.Text = "Saw";
             this.chSaw.UseVisualStyleBackColor = true;
+            this.chSaw.CheckedChanged += new System.EventHandler(this.chSaw_CheckedChanged);
             // 
             // txtLibGalac
             // 
