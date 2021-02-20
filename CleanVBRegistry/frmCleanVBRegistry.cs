@@ -42,22 +42,6 @@ namespace CleanVBRegistry {
                     RegistryKey vSubKey2 = vRegSubKey.OpenSubKey(SubKeyName,true);
                     foreach(string SubKeyDeepName in vSubKey2.GetSubKeyNames()) {
                         try {
-<<<<<<< HEAD
-                            var vSubKr = vSubKey2.OpenSubKey(SubKeyDeepName,true);
-                            var vF = vSubKr.GetValue("");
-                            if(vF != null) {
-                                if(Regex.IsMatch(vF.ToString(),vPathern,RegexOptions.IgnoreCase)) {
-                                    //vReg.DeleteSubKeyTree(xRegName);
-                                    //here
-                                    RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
-                                    object vRegKeyValue = vSubKeyNode.GetValue("");
-                                    if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
-                                        if(Regex.IsMatch(vRegKeyValue.ToString(),vPathern,RegexOptions.IgnoreCase)) {
-                                            InsertRegistryTab(ref RegistryTab,vSubKeyNode.Name,vRegKeyValue.ToString());
-                                            break;
-                                        }
-                                    }
-=======
                             RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
                             object vRegKeyValue = vSubKeyNode.GetValue("");
                             if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
@@ -68,7 +52,6 @@ namespace CleanVBRegistry {
                                         InsertRegistryTab(ref valKeysTable,vSubKeyNode.Name,vRegKeyValue.ToString(),true);
                                     }
                                     break;
->>>>>>> develop
                                 }
                             }
                         } catch(Exception yEx) {
