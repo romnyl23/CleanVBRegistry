@@ -33,6 +33,7 @@
             this.txtContabRpt = new System.Windows.Forms.TextBox();
             this.txtSaw = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.checkAll = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRegKey)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,11 +132,23 @@
             this.progressBar1.Size = new System.Drawing.Size(287, 23);
             this.progressBar1.TabIndex = 9;
             // 
+            // checkAll
+            // 
+            this.checkAll.AutoSize = true;
+            this.checkAll.Location = new System.Drawing.Point(233, 65);
+            this.checkAll.Name = "checkAll";
+            this.checkAll.Size = new System.Drawing.Size(71, 17);
+            this.checkAll.TabIndex = 10;
+            this.checkAll.Text = "Check All";
+            this.checkAll.UseVisualStyleBackColor = true;
+            this.checkAll.CheckedChanged += new System.EventHandler(this.checkAll_CheckedChanged);
+            // 
             // frmCleanVBRegistry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 381);
+            this.ClientSize = new System.Drawing.Size(306, 381);
+            this.Controls.Add(this.checkAll);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.txtSaw);
             this.Controls.Add(this.txtContabRpt);
@@ -167,5 +180,6 @@
         private System.Windows.Forms.TextBox txtContabRpt;
         private System.Windows.Forms.TextBox txtSaw;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.CheckBox checkAll;
     }
 }
