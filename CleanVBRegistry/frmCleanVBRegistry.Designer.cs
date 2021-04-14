@@ -135,7 +135,7 @@
             // checkAll
             // 
             this.checkAll.AutoSize = true;
-            this.checkAll.Location = new System.Drawing.Point(233, 65);
+            this.checkAll.Location = new System.Drawing.Point(231, 65);
             this.checkAll.Name = "checkAll";
             this.checkAll.Size = new System.Drawing.Size(71, 17);
             this.checkAll.TabIndex = 10;
@@ -147,6 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(306, 381);
             this.Controls.Add(this.checkAll);
             this.Controls.Add(this.progressBar1);
