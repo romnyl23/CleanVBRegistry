@@ -20,6 +20,7 @@ namespace CleanVBRegistry {
         DataTable SubRegistryTab;
         public frmCleanVBRegistry() {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
             eAction = Action.FindKeys;            
             checkAll.Enabled = false;
             chLibGalac.Checked = true;
@@ -108,7 +109,8 @@ namespace CleanVBRegistry {
         }
 
         private void button1_Click(object sender,EventArgs e) {
-            eAction = Action.FindKeys;            
+            eAction = Action.FindKeys;
+            dgvRegKey.DataSource = null;
             ExecuteFindKeysProcess();
         }
 
@@ -124,11 +126,7 @@ namespace CleanVBRegistry {
 
         private void ExecuteFindKeysProcess() {
             SetProgress(true);
-            RunTask();            
-            button2.Enabled = RegistryTab.Rows.Count > 0;
-            checkAll.Enabled = button2.Enabled;
-            FormatDataGridView(RegistryTab);
-            SetProgress(false);
+            RunTask();                        
         }
 
         private void FormatDataGridView(DataTable vTable) {
@@ -148,12 +146,9 @@ namespace CleanVBRegistry {
             }
         }
 
-        private void ExecuteDeleteProcess(DataTable vTable) {
-            DeleteRegistry(vTable);
-            dgvRegKey.DataSource = null;
-        }
+        
 
-        private void DeleteRegistry(DataTable vTable) {
+        private void DeleteRegistryKeys(DataTable vTable) {
             RegistryKey vRegKeyMaster = Registry.ClassesRoot;
             try {
                 foreach(DataRow vRow in vTable.Rows) {
@@ -176,10 +171,7 @@ namespace CleanVBRegistry {
         private void button2_Click(object sender,EventArgs e) {
             eAction = Action.DeleteKeys;
             dgvRegKey.EndEdit();
-            RunTask();
-            button2.Enabled = false;
-            checkAll.Enabled = false;
-            checkAll.Checked = false;
+            RunTask();            
         }
 
         private void chLibGalac_CheckedChanged(object sender,EventArgs e) {
@@ -205,12 +197,26 @@ namespace CleanVBRegistry {
                     ExecuteFindKeys();
                     break;
                 case Action.DeleteKeys:
-                    ExecuteDeleteProcess(RegistryTab);
-                    ExecuteDeleteProcess(SubRegistryTab);
+                    DeleteRegistryKeys(RegistryTab);
+                    DeleteRegistryKeys(SubRegistryTab);
                     break;
                 }
             });
             vTask.ContinueWith((t) => {
+                switch(eAction) {
+                case Action.FindKeys:
+                    button2.Enabled = RegistryTab.Rows.Count > 0;
+                    checkAll.Enabled = button2.Enabled;
+                    FormatDataGridView(RegistryTab);
+                    SetProgress(false);
+                    break;
+                case Action.DeleteKeys:
+                    dgvRegKey.DataSource = null;
+                    button2.Enabled = false;
+                    checkAll.Enabled = false;
+                    checkAll.Checked = false;
+                    break;
+                }
                 if(t.IsCompleted) {
                     MessageBox.Show(this.Owner,"Finalizado con exíto",Text,MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
                 } else {
@@ -233,7 +239,9 @@ namespace CleanVBRegistry {
             try {
                 if(checkAll.Checked) {
                     foreach(DataGridViewRow dr in dgvRegKey.Rows) {
-                        dr.Cells[2].Value = true;
+                        if(dr.Cells[1].Value!=null){
+                            dr.Cells[2].Value = true;
+                        }
                     }
                 }
             } catch(Exception vEx) {
