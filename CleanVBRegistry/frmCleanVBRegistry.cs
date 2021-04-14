@@ -67,11 +67,11 @@ namespace CleanVBRegistry {
                                 }
                             }
                         } catch(Exception yEx) {
-                            throw yEx;
+                            throw new Exception(yEx.Message + ", Se necesita permiso de administrador");
                         }
                     }
                 } catch(Exception xEx) {
-                    if(xEx.Message.Contains("Acceso denegado al Registro solicitado.")) {
+                    if(xEx.Message.Contains("Acceso denegado al Registro solicitado")) {
                         continue;
                     } else {
                         throw xEx;
@@ -215,6 +215,9 @@ namespace CleanVBRegistry {
                     button2.Enabled = false;
                     checkAll.Enabled = false;
                     checkAll.Checked = false;
+                    txtContabRpt.Clear();
+                    txtLibGalac.Clear();
+                    txtSaw.Clear();
                     break;
                 }
                 if(t.IsCompleted) {
