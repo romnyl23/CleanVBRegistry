@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace CleanVBRegistry {
 
-    enum Action { 
+    enum Action {
         FindKeys,
         DeleteKeys
     }
@@ -17,11 +17,12 @@ namespace CleanVBRegistry {
     public partial class frmCleanVBRegistry:Form {
         Action eAction = new Action();
         DataTable RegistryTab;
-        DataTable SubRegistryTab;
+        DataTable CLSIDTab;
+        string _Pathern;
         public frmCleanVBRegistry() {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
-            eAction = Action.FindKeys;            
+            eAction = Action.FindKeys;
             checkAll.Enabled = false;
             chLibGalac.Checked = true;
             txtLibGalac.Enabled = true;
@@ -47,45 +48,54 @@ namespace CleanVBRegistry {
         }
 
         private void FinKeys(string valNodePath,string valFindPathern,ref DataTable valKeysTable) {
-            RegistryKey vRegKeyMaster = Registry.ClassesRoot;
-            RegistryKey vRegSubKey = vRegKeyMaster.OpenSubKey(valNodePath,true);
-            foreach(string SubKeyName in vRegSubKey.GetSubKeyNames()) {
-                try {
-                    RegistryKey vSubKey2 = vRegSubKey.OpenSubKey(SubKeyName,true);
-                    foreach(string SubKeyDeepName in vSubKey2.GetSubKeyNames()) {
-                        try {
-                            RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
-                            object vRegKeyValue = vSubKeyNode.GetValue("");
-                            if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
-                                if(Regex.IsMatch(vRegKeyValue.ToString(),valFindPathern,RegexOptions.IgnoreCase)) {
-                                    if(valNodePath.Contains("TypeLib")) {
-                                        InsertRegistryTab(ref valKeysTable,vSubKeyNode.Name,vRegKeyValue.ToString());
-                                    } else {
-                                        InsertRegistryTab(ref valKeysTable,vSubKeyNode.Name,vRegKeyValue.ToString(),true);
+            bool vContinueReg = false;
+            try {
+                RegistryKey vRegKeyMaster = Registry.ClassesRoot;
+                RegistryKey vRegSubKey = vRegKeyMaster.OpenSubKey(valNodePath,true);
+                foreach(string SubKeyName in vRegSubKey.GetSubKeyNames()) {
+                    vContinueReg = true;
+                    try {
+                        RegistryKey vSubKey2 = vRegSubKey.OpenSubKey(SubKeyName,true);
+                        foreach(string SubKeyDeepName in vSubKey2.GetSubKeyNames()) {
+                            try {
+                                RegistryKey vSubKeyNode = vSubKey2.OpenSubKey(SubKeyDeepName,true);
+                                object vRegKeyValue = vSubKeyNode.GetValue("");
+                                if(vRegKeyValue != null && vRegKeyValue.ToString() != string.Empty) {
+                                    if(Regex.IsMatch(vRegKeyValue.ToString(),valFindPathern,RegexOptions.IgnoreCase)) {
+                                        if(valNodePath.Contains("TypeLib")) {
+                                            InsertRegistryTab(ref valKeysTable,vSubKeyNode.Name,vRegKeyValue.ToString());
+                                        } else {
+                                            InsertRegistryTab(ref valKeysTable,vSubKeyNode.Name,vRegKeyValue.ToString(),true);
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
+                            } catch(Exception yEx) {
+                                throw yEx;
                             }
-                        } catch(Exception yEx) {
-                            throw new Exception(yEx.Message + ", Se necesita permiso de administrador");
+                        }
+                    } catch(Exception xEx) {
+                        if(xEx.Message.Contains("Acceso denegado al Registro solicitado")) {
+                            continue;
+                        } else {
+                            throw xEx;
                         }
                     }
-                } catch(Exception xEx) {
-                    if(xEx.Message.Contains("Acceso denegado al Registro solicitado")) {
-                        continue;
-                    } else {
-                        throw xEx;
-                    }
+                }
+                vRegSubKey.Close();
+            } catch(Exception mEx) {
+                if(mEx.Message.Contains("Acceso denegado al Registro solicitado") && !vContinueReg) {
+                    throw new Exception("Se necesitan permisos de administrador");
+                } else {
+                    throw mEx;
                 }
             }
-            vRegSubKey.Close();
         }
 
         private void ExecuteFindKeys() {
             try {
                 RegistryTab = TabConfig();
-                SubRegistryTab = TabConfig();
-                string vPathern;
+                CLSIDTab = TabConfig();
                 string OptSaw, OptLib, OptConatbRpt, SawVersion, ContabVersion, LibGalacVersion, vSep1, vSep2;
                 SawVersion = (txtSaw.Text != string.Empty) ? "_" + txtSaw.Text : "";
                 ContabVersion = (txtContabRpt.Text != string.Empty) ? "_" + txtContabRpt.Text : "";
@@ -96,13 +106,13 @@ namespace CleanVBRegistry {
                 //
                 vSep1 = OptSaw != string.Empty && (OptLib != string.Empty || OptConatbRpt != string.Empty) ? "|" : "";
                 vSep2 = (OptLib != string.Empty && OptConatbRpt != string.Empty) ? "|" : "";
-                vPathern = $"({OptSaw + vSep1 + OptLib + vSep2 + OptConatbRpt})";
+                _Pathern = $"({OptSaw + vSep1 + OptLib + vSep2 + OptConatbRpt})";
                 //
                 string vNodePath = Environment.Is64BitOperatingSystem ? "WOW6432Node\\TypeLib" : "TypeLib";
-                FinKeys(vNodePath,vPathern,ref RegistryTab);
+                FinKeys(vNodePath,_Pathern,ref RegistryTab);
                 //
                 vNodePath = Environment.Is64BitOperatingSystem ? "WOW6432Node\\CLSID" : "CLSID";
-                FinKeys(vNodePath,vPathern,ref SubRegistryTab);
+                FinKeys(vNodePath,_Pathern,ref CLSIDTab);
             } catch(Exception vEx) {
                 MessageBox.Show(vEx.Message);
             }
@@ -111,7 +121,8 @@ namespace CleanVBRegistry {
         private void button1_Click(object sender,EventArgs e) {
             eAction = Action.FindKeys;
             dgvRegKey.DataSource = null;
-            ExecuteFindKeysProcess();
+            SetProgress(true);
+            RunTask();
         }
 
         private void SetProgress(bool reset) {
@@ -124,11 +135,6 @@ namespace CleanVBRegistry {
             }
         }
 
-        private void ExecuteFindKeysProcess() {
-            SetProgress(true);
-            RunTask();                        
-        }
-
         private void FormatDataGridView(DataTable vTable) {
             dgvRegKey.DataSource = RegistryTab;
             dgvRegKey.Columns[0].Visible = false;
@@ -137,7 +143,7 @@ namespace CleanVBRegistry {
         }
 
         private void frmCleanVBRegistry_Load(object sender,EventArgs e) {
-            
+
         }
 
         private void txtInputKey_Press(object sender,KeyPressEventArgs e) {
@@ -146,23 +152,31 @@ namespace CleanVBRegistry {
             }
         }
 
-        
+
+        private string CutRegValue(string vKeyValue) {
+            int vPos = vKeyValue.LastIndexOf('\u005c') + 1;
+            return vKeyValue.Substring(vPos);
+        }
 
         private void DeleteRegistryKeys(DataTable vTable) {
             RegistryKey vRegKeyMaster = Registry.ClassesRoot;
             try {
                 foreach(DataRow vRow in vTable.Rows) {
                     string fRegName = vRow["KeyRegName"].ToString();
+                    string fRegValue = vRow["KeyRegValue"].ToString();
                     bool vDeleteReg = (bool)vRow["Delete Key"];
+                    bool f = true;
+                    fRegValue = CutRegValue(fRegValue);
                     fRegName = fRegName.Substring(fRegName.IndexOf("\\") + 1);
-                    if(vDeleteReg) {
+                    if(vDeleteReg && Regex.IsMatch(fRegValue.ToString(),_Pathern,RegexOptions.IgnoreCase)) {
                         RegistryKey vRegSubKey = vRegKeyMaster.OpenSubKey(fRegName,true);
                         if(vRegSubKey != null) {
-                            vRegKeyMaster.DeleteSubKeyTree(fRegName);
+                            //vRegKeyMaster.DeleteSubKeyTree(fRegName);                           
                         }
                         vRegKeyMaster.Close();
-                    }
+                    } 
                 }
+                _Pathern = "";
             } catch(Exception vEx) {
                 throw vEx;
             }
@@ -171,7 +185,7 @@ namespace CleanVBRegistry {
         private void button2_Click(object sender,EventArgs e) {
             eAction = Action.DeleteKeys;
             dgvRegKey.EndEdit();
-            RunTask();            
+            RunTask();
         }
 
         private void chLibGalac_CheckedChanged(object sender,EventArgs e) {
@@ -198,7 +212,7 @@ namespace CleanVBRegistry {
                     break;
                 case Action.DeleteKeys:
                     DeleteRegistryKeys(RegistryTab);
-                    DeleteRegistryKeys(SubRegistryTab);
+                    DeleteRegistryKeys(CLSIDTab);
                     break;
                 }
             });
@@ -242,7 +256,7 @@ namespace CleanVBRegistry {
             try {
                 if(checkAll.Checked) {
                     foreach(DataGridViewRow dr in dgvRegKey.Rows) {
-                        if(dr.Cells[1].Value!=null){
+                        if(dr.Cells[1].Value != null) {
                             dr.Cells[2].Value = true;
                         }
                     }
